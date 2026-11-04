@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Hotel.Web.Models.Habitacion>
+
+@{
+    ViewData["Title"] = "Consultar Disponibilidad";
+}
+
+<h2>Consultar Disponibilidad de Habitaciones</h2>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label class="form-label">Fecha Ingreso</label>
+        <input type="date" name="ingreso" value="@(ViewBag.Ingreso?.ToString("yyyy-MM-dd"))" class="form-control" required />
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Fecha Salida</label>
+        <input type="date" name="salida" value="@(ViewBag.Salida?.ToString("yyyy-MM-dd"))" class="form-control" required />
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Buscar Disponibles</button>
+    </div>
+</form>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        @Html.ValidationSummary()
+    </div>
+}
+
+@if (ViewBag.Noches != null)
+{
+    <h4>Habitaciones Libres para @ViewBag.Noches noche(s)</h4>
+    <table class="table table-bordered align-middle">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Piso</th>
+                <th>Tipo</th>
+                <th>Precio / Noche</th>
+                <th>Total Estimado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var precioNoche = item.IdTipoHabitacionNavigation?.PrecioNoche ?? 0m;
+                var total = precioNoche * (int)ViewBag.Noches;
+                <tr>
+                    <td><strong>@item.Numero</strong></td>
+                    <td>@item.Piso</td>
+                    <td>@item.IdTipoHabitacionNavigation?.Nombre</td>
+                    <td>S/ @precioNoche.ToString("F2")</td>
+                    <td><strong>S/ @total.ToString("F2")</strong></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

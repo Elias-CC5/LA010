@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Hotel.Web.Models.Reserva>
+
+@{
+    ViewData["Title"] = "Lista de Reservas";
+}
+
+<h2>Gestión de Reservas</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<a asp-action="Create" class="btn btn-primary mb-3">Nueva Reserva</a>
+
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Huésped</th>
+            <th>Habitación</th>
+            <th>Ingreso</th>
+            <th>Salida</th>
+            <th>Estado</th>
+            <th>Total Estimado</th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            var noches = r.FechaSalida.DayNumber - r.FechaIngreso.DayNumber;
+            var precioNoche = r.IdHabitacionNavigation?.IdTipoHabitacionNavigation?.PrecioNoche ?? 0m;
+            var total = precioNoche * (noches <= 0 ? 1 : noches);
+            <tr>
+                <td>@r.IdHuespedNavigation?.Nombres</td>
+                <td>Hab. @r.IdHabitacionNavigation?.Numero</td>
+                <td>@r.FechaIngreso.ToString("dd/MM/yyyy")</td>
+                <td>@r.FechaSalida.ToString("dd/MM/yyyy")</td>
+                <td><span class="badge bg-secondary">@r.Estado</span></td>
+                <td>S/ @total.ToString("F2")</td>
+                <td>
+                    @if (r.Estado == "Pendiente" || r.Estado == "Confirmada")
+                    {
+                        <form asp-action="Cancelar" asp-route-id="@r.IdReserva" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Cancelar reserva?')">Cancelar</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

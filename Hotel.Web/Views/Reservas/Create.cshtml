@@ -1,0 +1,49 @@
+﻿@model Hotel.Web.Models.Reserva
+
+@{
+    ViewData["Title"] = "Nueva Reserva";
+}
+
+<h2>Crear Nueva Reserva</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Huésped</label>
+        <select asp-for="IdHuesped" asp-items="ViewBag.IdHuesped" class="form-select">
+            <option value="">-- Seleccionar Huésped --</option>
+        </select>
+        <span asp-validation-for="IdHuesped" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Habitación</label>
+        <select asp-for="IdHabitacion" asp-items="ViewBag.IdHabitacion" class="form-select">
+            <option value="">-- Seleccionar Habitación --</option>
+        </select>
+        <span asp-validation-for="IdHabitacion" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de Ingreso</label>
+        <input asp-for="FechaIngreso" type="date" class="form-control" />
+        <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de Salida</label>
+        <input asp-for="FechaSalida" type="date" class="form-control" />
+        <span asp-validation-for="FechaSalida" class="text-danger"></span>
+    </div>
+
+    <!-- Campo de Observaciones solicitado en el punto 13 del laboratorio -->
+    <div class="mb-3">
+        <label class="form-label">Observaciones</label>
+        <textarea asp-for="Observaciones" class="form-control" rows="3" placeholder="Notas opcionales de la reserva..."></textarea>
+        <span asp-validation-for="Observaciones" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Crear Reserva</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
